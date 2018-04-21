@@ -1,7 +1,9 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
@@ -11,36 +13,33 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  * ...
  * @author 
  */
-class Player extends FlxSprite 
+class Player extends Character 
 {
-	public var followSpeed:Int = 150;
-	public var _playerSpeed:Float = 2700;
-	private var _playerDrag:Float = 900;
-	private var playerMaxVel:Float = 350;
-	private var curRads:Float = 0;
-	public var accuracy:Float = 1;
-	
-
-	public var tartgetLook:FlxPoint = FlxPoint.get();
-	public var firerate:Int = 0;
-	private var curFirtime:Int = 0;
-	public var canFire:Bool = false;
-	public var isDead:Bool = false;
-	public var maxHealth:Float = 10;
-	
-	public var bulletArray:FlxTypedGroup<Bullet>;
-
-	
 	public function new(?X:Float=0, ?Y:Float=0, playerBulletArray:FlxTypedGroup<Bullet>) 
 	{
 		super(X, Y);
 		
+		setFacingFlip(FlxObject.LEFT, false, false);
+		setFacingFlip(FlxObject.RIGHT, true, false);
+		
+		var tex = FlxAtlasFrames.fromSpriteSheetPacker(AssetPaths.goblinSheet__png, AssetPaths.goblinSheet__txt);
+		
+		frames = tex;
+		
+		resizeHitbox();
+		
+		animation.add("lr", [2]);
+		animation.add("u", [1]);
+		animation.add("d", [0]);
+		animation.play("d");
+		
+		
 		bulletArray = playerBulletArray;
 		
-		makeGraphic(90, 90);
-		drag.x = _playerDrag;
-		drag.y = _playerDrag;
-		maxVelocity.x = maxVelocity.y = playerMaxVel;
+		
+		drag.x = Drag;
+		drag.y = Drag;
+		maxVelocity.x = maxVelocity.y = MaxVel;
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -73,19 +72,27 @@ class Player extends FlxSprite
 		{
 			if (_up)
 			{
-				acceleration.y = -_playerSpeed;
+				acceleration.y = -Speed;
+				facing = FlxObject.UP;
 			}
 			else if (_down)
 			{
-				acceleration.y = _playerSpeed;
+				acceleration.y = Speed;
+				facing = FlxObject.DOWN;
 			}
 			else
 				acceleration.y = 0;
 			
 			if (_left)
-				acceleration.x = -_playerSpeed;
+			{
+				facing = FlxObject.LEFT;
+				acceleration.x = -Speed;
+			}
 			else if (_right)
-				acceleration.x = _playerSpeed;
+			{
+				facing = FlxObject.RIGHT;
+				acceleration.x = Speed;
+			}
 			else
 				acceleration.x = 0;
 			
@@ -96,6 +103,22 @@ class Player extends FlxSprite
 		{
 			acceleration.x = acceleration.y = 0;
 		}
+		
+		if ((velocity.y != 0 || velocity.x != 0) && touching == FlxObject.NONE)
+		{
+			switch(facing)
+			{
+				case FlxObject.LEFT:
+					animation.play("lr");
+				case FlxObject.RIGHT:
+					animation.play("lr");
+				case FlxObject.UP:
+					animation.play("u");
+				case FlxObject.DOWN:
+					animation.play("d");
+			}
+		}
+		
 	}
 	
 	private function rotation():Void
@@ -134,7 +157,7 @@ class Player extends FlxSprite
 	{
 		if (canFire)
 		{
-			var newBullet = new Bullet(getMidpoint().x, getMidpoint().y, 1000, 60, curRads);
+			var newBullet = new Bullet(getMidpoint().x, getMidpoint().y - 160, 1000, 60, curRads);
 			newBullet.accuracy = accuracy;
 			newBullet.bType = bullType;
 			newBullet.velocity.x += velocity.x * 0.2;
@@ -142,8 +165,8 @@ class Player extends FlxSprite
 			bulletArray.add(newBullet);
 			canFire = false;
 			
-			velocity.x -= newBullet.velocity.x * 0.25;
-			velocity.y -= newBullet.velocity.y * 0.25;
+			velocity.x -= newBullet.velocity.x * 0.1;
+			velocity.y -= newBullet.velocity.y * 0.1;
 			
 			/*
 			var muzzFlash = new BulletStuff(getMidpoint().x - (32 / 2), getMidpoint().y - (20 / 2));

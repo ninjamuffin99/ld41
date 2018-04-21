@@ -42,8 +42,8 @@ class Bullet extends FlxSprite
 		var xdir = Math.cos(angleOffset);
 		var ydir = Math.sin(angleOffset);
 		
-		x += xdir * 35;
-		y += ydir * 35;
+		x += xdir * 10;
+		y += ydir * 10;
 		
 		speed = Speed;
 		
