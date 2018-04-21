@@ -30,14 +30,27 @@ class PlayState extends FlxState
 		enemy = new Enemy();
 		add(enemy);
 		
+		
 		super.create();
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
 		cameraHandle();
+		
+		playerBullets.forEachAlive(checkBulletOverlap);
+		
+	}
+	
+	private function checkBulletOverlap(b:Bullet):Void
+	{
+		if (FlxG.overlap(enemy, b))
+		{
+			/*enemy.velocity.x += b.velocity.x * 0.1;
+			enemy.velocity.y += b.velocity.y * 0.1;*/
+			b.kill;
+		}
 	}
 	
 	private function cameraHandle():Void

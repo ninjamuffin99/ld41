@@ -16,7 +16,7 @@ class Enemy extends FlxSprite
 		super(X, Y);
 		
 		makeGraphic(64, 64, FlxColor.RED);
-		
+		drag.set(500, 500);
 	}
 	
 }
