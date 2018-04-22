@@ -1,6 +1,8 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 
@@ -19,10 +21,16 @@ class Enemy extends Character
 		drag.set(500, 500);
 		resizeHitbox();
 		ID = Character.ENEMY;
+		
+
+		
 	}
 	
-	private function newCandidate():Void
+	override public function update(elapsed:Float):Void 
 	{
+		
+		super.update(elapsed);
+	
 		
 	}
 	

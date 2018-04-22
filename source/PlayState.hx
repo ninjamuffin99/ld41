@@ -6,9 +6,15 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
+import openfl.Lib;
+import openfl.media.Video;
+import openfl.net.NetConnection;
+import openfl.net.NetStream;
 
 class PlayState extends FlxState
 {
@@ -17,22 +23,21 @@ class PlayState extends FlxState
 	private var _camTrack:FlxObject;
 	private var _player:Player;
 	private var playerBullets:FlxTypedGroup<Bullet>;
-
 	private var enemy:Enemy;
 
 	private var _grpCharacters:FlxTypedGroup<Character>;
 	
+	private var _phone:PhoneGroup;
+	
+	
 	private var voteCounter:Int = 0;
 	private var totalVotes:Int = 0;
-	private var txtVotes:FlxText;
-	
 	private var moawVotes:Int = 0;
-	
 	private var countdown:Float = 120;
-	private var txtTimer:FlxText;
 
 	override public function create():Void
 	{
+		FlxG.camera.zoom = 0.7;
 		bg = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.GRAY);
 		add(bg);
 		
@@ -41,7 +46,22 @@ class PlayState extends FlxState
 		
 		FlxG.worldBounds.set(0, 0, bg.width, bg.height);
 
+		//playMovie();
 		super.create();
+	}
+	
+	private function playMovie():Void
+	{
+		//LMAO I came across this bullshit, here's how to load mp4's from the web, LMAOOO
+		var screen = new Video();
+		var connection = new NetConnection();
+		connection.connect(null);
+		var stream = new NetStream(connection);
+		screen = new Video();
+		FlxG.stage.addChild(screen);
+		screen.attachNetStream(stream);
+		trace(" Now playing movie1.flv ");
+		stream.play("https://uploads.ungrounded.net/alternate/1211000/1211677_alternate_58915.720p.mp4?f1523935941");
 	}
 	
 	private function initCharacters():Void
@@ -65,7 +85,7 @@ class PlayState extends FlxState
 		enemy = new Enemy(50, 50);
 		_grpCharacters.add(enemy);
 		
-		for (i in 0...FlxG.random.int(8, 30))
+		for (i in 0...FlxG.random.int(30, 100))
 		{
 			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width), FlxG.random.float(0, bg.height));
 			_grpCharacters.add(testie);
@@ -75,31 +95,96 @@ class PlayState extends FlxState
 	
 	private function initHUD():Void
 	{
-		txtVotes = new FlxText(10, 10, 0, "", 24);
-		txtVotes.scrollFactor.set(0, 0);
-		add(txtVotes);
-		
-		txtTimer = new FlxText(300, 10, 0, "", 24);
-		txtTimer.scrollFactor.set();
-		add(txtTimer);
+		_phone = new PhoneGroup(10, FlxG.height);
+		_phone.scrollFactor.set();
+		add(_phone);
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		
-		txtVotes.text = "Your Votes: " + voteCounter + " / " + totalVotes;
-		txtTimer.text = "Time Left: " + Std.int(countdown / 60) + ":" + Std.int(countdown % 60);
+		phoneHandling();
 		
-		countdown -= FlxG.elapsed;
+		if (countdown > 0)
+		{
+			countdown -= FlxG.elapsed;
+		}
+		
+		_phone.countTimer = countdown;
+		_phone.votes = voteCounter;
+		_phone.totVotes = totalVotes;
+		_phone.votesMoaw = moawVotes;
+		
+		moawVotes = 0;
+		voteCounter = 0;
+		_grpCharacters.forEach(characterLogic);
 		
 		_grpCharacters.sort(FlxSort.byY);
-		cameraHandle();
+		if (_phone.on)
+		{
+			FlxG.camera.followLerp = 0.04;
+			_camTrack.setPosition(_player.x - 150, _player.y - 50);
+			if (_camTrack.ID != 1)
+			{
+				FlxTween.tween(FlxG.camera, {zoom: 0.9}, 0.3, {ease:FlxEase.quadInOut});
+				_camTrack.ID = 1;
+			}
+			
+		}
+		else
+		{
+			if (_camTrack.ID != 0)
+			{
+				FlxTween.tween(FlxG.camera, {zoom: 0.7}, 0.3, {ease:FlxEase.quadInOut});
+				_camTrack.ID = 0;
+			}
+			
+			FlxG.camera.followLerp = 0.45;
+			cameraHandle();
+		}
+		
 
 		playerBullets.forEachAlive(checkBulletOverlap);
 
 		FlxG.collide(_grpCharacters, _grpCharacters);
 
+	}
+	
+	private function phoneHandling():Void
+	{
+		if (FlxG.keys.justPressed.E)
+		{
+			var goalY:Float = 0;
+			var curEase;
+			if (_phone.on)
+			{
+				goalY = FlxG.height + 160;
+				curEase = FlxEase.backIn;
+			}
+			else
+			{
+				goalY = 20;
+				curEase = FlxEase.backOut;
+			}
+			
+			_phone.on = !_phone.on;
+			
+			FlxTween.tween(_phone, {y: goalY}, 0.4, {ease:curEase});
+			
+			
+		}
+	}
+
+	private function characterLogic(c:Character):Void
+	{
+		switch(c.currentVote)
+		{
+			case Character.PLAYER:
+				voteCounter += 1;
+			case Character.ENEMY:
+				moawVotes += 1;
+		}
 	}
 
 	private function checkBulletOverlap(b:Bullet):Void
@@ -117,14 +202,18 @@ class PlayState extends FlxState
 						FlxG.log.add("B Overlap");
 						b.kill();
 					case Character.BYSTANDER:
-						if (!c.votedPlayer)
+						if (c.currentVote == Character.PLAYER)
 						{
-							voteCounter += 1;
-							c.votedPlayer = true;
+							c.currentVote = Character.NONE;
+						}
+						else if (c.currentVote == Character.NONE)
+						{
+							c.currentVote = Character.PLAYER;
 						}
 						
 						b.kill();
 				}
+				
 			}	
 		}
 	}

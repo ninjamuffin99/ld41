@@ -17,6 +17,8 @@ class Player extends Character
 		
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
+		setFacingFlip(FlxObject.DOWN, false, false);
+		setFacingFlip(FlxObject.UP, false, false);
 		
 		var tex = FlxAtlasFrames.fromSpriteSheetPacker(AssetPaths.goblinSheet__png, AssetPaths.goblinSheet__txt);
 		
@@ -144,12 +146,19 @@ class Player extends Character
 		}
 		
 		var mClicked:Bool = FlxG.mouse.justPressed;
+		var rmClicked:Bool = FlxG.mouse.justPressedRight;
 		
 		if (mClicked)
 		{
 			FlxG.camera.shake(0.01, 0.08);
 			attack("Player");
 		}
+		else if (rmClicked)
+		{
+			FlxG.camera.shake(0.01, 0.08);
+			attack("PlayerRight");
+		}
+		
 	}
 	
 	public function attack(bullType:String):Void

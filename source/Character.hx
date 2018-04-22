@@ -30,11 +30,12 @@ class Character extends FlxSprite
 	
 	public var bulletArray:FlxTypedGroup<Bullet>;
 	
+	public static inline var NONE:Int = 0;
 	public static inline var PLAYER:Int = 1;
 	public static inline var ENEMY:Int = 2;
 	public static inline var BYSTANDER:Int = 3;
 	
-	public var votedPlayer:Bool = false;
+	public var currentVote:Int = 0;
 	
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{
