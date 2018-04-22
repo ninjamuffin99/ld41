@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -29,12 +30,23 @@ class Character extends FlxSprite
 	
 	public var bulletArray:FlxTypedGroup<Bullet>;
 	
-	private var hitBox:FlxObject;
+	public static inline var PLAYER:Int = 1;
+	public static inline var ENEMY:Int = 2;
+	public static inline var BYSTANDER:Int = 3;
+	
+	public var votedPlayer:Bool = false;
 	
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{
 		super(X, Y);
+		makeGraphic(220, 320, FlxColor.GREEN);
 		
+		
+		drag.x = Drag;
+		drag.y = Drag;
+		maxVelocity.x = maxVelocity.y = MaxVel;
+		
+		resizeHitbox();
 	}
 	
 	private function resizeHitbox():Void

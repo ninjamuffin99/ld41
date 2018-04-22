@@ -36,10 +36,7 @@ class Player extends Character
 		
 		bulletArray = playerBulletArray;
 		
-		
-		drag.x = Drag;
-		drag.y = Drag;
-		maxVelocity.x = maxVelocity.y = MaxVel;
+		ID = Character.PLAYER;
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -53,10 +50,10 @@ class Player extends Character
 	
 	private function controls():Void
 	{
-		var _left:Bool = FlxG.keys.anyPressed(["A", "LEFT"]);
-		var _right:Bool = FlxG.keys.anyPressed(["D", "RIGHT"]);
-		var _down:Bool = FlxG.keys.anyPressed(["S", "DOWN"]);
-		var _up:Bool = FlxG.keys.anyPressed(["W", "UP"]);
+		var _left:Bool = FlxG.keys.anyPressed(["A"]);
+		var _right:Bool = FlxG.keys.anyPressed(["D"]);
+		var _down:Bool = FlxG.keys.anyPressed(["S"]);
+		var _up:Bool = FlxG.keys.anyPressed(["W"]);
 		
 		if (_left && _right)
 		{
@@ -70,6 +67,15 @@ class Player extends Character
 		
 		if (_left || _right || _up || _down)
 		{
+			if (FlxG.keys.pressed.SHIFT)
+			{
+				maxVelocity.set(MaxVel * 1.4, MaxVel * 1.4);
+			}
+			else
+			{
+				maxVelocity.set(MaxVel, MaxVel);
+			}
+			
 			if (_up)
 			{
 				acceleration.y = -Speed;
@@ -103,6 +109,7 @@ class Player extends Character
 		{
 			acceleration.x = acceleration.y = 0;
 		}
+		
 		
 		if ((velocity.y != 0 || velocity.x != 0) && touching == FlxObject.NONE)
 		{

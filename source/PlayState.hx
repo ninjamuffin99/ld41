@@ -1,16 +1,20 @@
 package;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.text.FlxText;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 
 class PlayState extends FlxState
 {
+	private var bg:FlxSprite;
+	
 	private var _camTrack:FlxObject;
 	private var _player:Player;
 	private var playerBullets:FlxTypedGroup<Bullet>;
@@ -20,14 +24,28 @@ class PlayState extends FlxState
 	private var _grpCharacters:FlxTypedGroup<Character>;
 	
 	private var voteCounter:Int = 0;
+	private var totalVotes:Int = 0;
+	private var txtVotes:FlxText;
 
 	override public function create():Void
 	{
 		FlxG.camera.zoom = 0.5;
 
-		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.GRAY);
+		bg = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.GRAY);
 		add(bg);
+		
+		initCharacters();
 
+		initHUD();
+		
+		FlxG.worldBounds.set(0, 0, bg.width, bg.height);
+
+		super.create();
+	}
+	
+	private function initCharacters():Void
+	{
+		
 		_camTrack = new FlxObject(0, 0, 1, 1);
 		add(_camTrack);
 
@@ -46,14 +64,26 @@ class PlayState extends FlxState
 		enemy = new Enemy(50, 50);
 		_grpCharacters.add(enemy);
 		
-		FlxG.worldBounds.set(0, 0, bg.width, bg.height);
-
-		super.create();
+		for (i in 0...FlxG.random.int(3, 6))
+		{
+			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width), FlxG.random.float(0, bg.height));
+			_grpCharacters.add(testie);
+			totalVotes += 1;
+		}
+	}
+	
+	private function initHUD():Void
+	{
+		txtVotes = new FlxText(10, 10, 0, "", 32);
+		txtVotes.scrollFactor.set(0, 0);
+		add(txtVotes);
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		
+		txtVotes.text = "Votes: " + voteCounter + " / " + totalVotes;
 
 		_grpCharacters.sort(FlxSort.byY);
 		cameraHandle();
@@ -66,12 +96,28 @@ class PlayState extends FlxState
 
 	private function checkBulletOverlap(b:Bullet):Void
 	{
-		if (FlxCollision.pixelPerfectCheck(enemy, b))
+		
+		for (c in _grpCharacters.members)
 		{
-			/*enemy.velocity.x += b.velocity.x * 0.1;
-			enemy.velocity.y += b.velocity.y * 0.1;*/
-			FlxG.log.add("B Overlap");
-			b.kill();
+			if (FlxCollision.pixelPerfectCheck(c, b))
+			{
+				switch(c.ID)
+				{
+					case Character.ENEMY:
+						/*enemy.velocity.x += b.velocity.x * 0.1;
+						enemy.velocity.y += b.velocity.y * 0.1;*/
+						FlxG.log.add("B Overlap");
+						b.kill();
+					case Character.BYSTANDER:
+						if (!c.votedPlayer)
+						{
+							voteCounter += 1;
+							c.votedPlayer = true;
+						}
+						
+						b.kill();
+				}
+			}	
 		}
 	}
 
@@ -84,13 +130,6 @@ class PlayState extends FlxState
 		var camOffset = 0.4;
 		dx *= camOffset;
 		dy *= camOffset;
-
-		if (FlxG.keys.pressed.SHIFT)
-		{
-			var shiftChange = 1.35;
-			dx *= shiftChange;
-			dy *= shiftChange;
-		}
 		_camTrack.x = _player.x - dx;
 		_camTrack.y = _player.y - dy;
 	}
