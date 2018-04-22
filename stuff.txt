@@ -2,12 +2,13 @@ Todo:
 	you cant hit chaperones
 	when you hit kids with kisses it shows kids with different colors
 	charge up kiss could be different for different classes
-	a heart fades in on bystander when you get closer, and changes color depending on how much they like you
+	
 	possibly, if you hit them too much, thye won't vote for you, and you might have to wait 20 seconds or something
 	ending:Screen gets dark, camera goes to stage, then winners are announced
+	maybe you have to hit them with a specific bullet to check what percentage they're at?
 	
 Current Task:
-
+	a heart fades in on bystander when you get closer, and changes color depending on how much they like you
 Done:
 	shoot bullet to make them vote, and if you shoot them twice it negates it
 	player has to check phone for time and votes

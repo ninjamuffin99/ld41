@@ -36,6 +36,7 @@ class Character extends FlxSprite
 	public static inline var BYSTANDER:Int = 3;
 	
 	public var currentVote:Int = 0;
+	public var heart:HeartIcon;
 	
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{

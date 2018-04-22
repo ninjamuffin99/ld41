@@ -26,6 +26,7 @@ class PlayState extends FlxState
 	private var enemy:Enemy;
 
 	private var _grpCharacters:FlxTypedGroup<Character>;
+	private var _grpHearts:FlxTypedGroup<HeartIcon>;
 	
 	private var _phone:PhoneGroup;
 	
@@ -35,6 +36,8 @@ class PlayState extends FlxState
 	private var moawVotes:Int = 0;
 	private var countdown:Float = 120;
 
+	private var finished:Bool = false;
+	
 	override public function create():Void
 	{
 		FlxG.camera.zoom = 0.7;
@@ -72,6 +75,8 @@ class PlayState extends FlxState
 
 		_grpCharacters = new FlxTypedGroup<Character>();
 		add(_grpCharacters);
+		_grpHearts = new FlxTypedGroup<HeartIcon>();
+		add(_grpHearts);
 
 		playerBullets = new FlxTypedGroup<Bullet>();
 		add(playerBullets);
@@ -90,6 +95,12 @@ class PlayState extends FlxState
 			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width), FlxG.random.float(0, bg.height));
 			_grpCharacters.add(testie);
 			totalVotes += 1;
+			
+			var heart:HeartIcon = new HeartIcon(0, 0, testie);
+			_grpHearts.add(heart);
+			
+			testie.heart = heart;
+			
 		}
 	}
 	
@@ -109,6 +120,11 @@ class PlayState extends FlxState
 		if (countdown > 0)
 		{
 			countdown -= FlxG.elapsed;
+		}
+		else if (!finished)
+		{
+			finishGame();
+			finished = true;
 		}
 		
 		_phone.countTimer = countdown;
@@ -146,9 +162,21 @@ class PlayState extends FlxState
 		
 
 		playerBullets.forEachAlive(checkBulletOverlap);
-
+		
 		FlxG.collide(_grpCharacters, _grpCharacters);
 
+	}
+	
+	private function finishGame():Void
+	{
+		FlxG.camera.fade(FlxColor.BLACK, 1, false, function()
+		{
+			//send all the people to near the stage facing up, and turn off their AI
+			FlxG.camera.fade(FlxColor.BLACK, 1, true, function()
+			{
+				//text shit
+			});
+		});
 	}
 	
 	private function phoneHandling():Void
@@ -202,13 +230,20 @@ class PlayState extends FlxState
 						FlxG.log.add("B Overlap");
 						b.kill();
 					case Character.BYSTANDER:
-						if (c.currentVote == Character.PLAYER)
+						if (b.bType == "Player")
 						{
-							c.currentVote = Character.NONE;
+							if (c.currentVote == Character.PLAYER)
+							{
+								c.currentVote = Character.NONE;
+							}
+							else if (c.currentVote == Character.NONE)
+							{
+								c.currentVote = Character.PLAYER;
+							}
 						}
-						else if (c.currentVote == Character.NONE)
+						else if (c.heart != null)
 						{
-							c.currentVote = Character.PLAYER;
+							c.heart.alpha = 1;
 						}
 						
 						b.kill();

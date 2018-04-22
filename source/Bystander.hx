@@ -15,6 +15,7 @@ class Bystander extends Character
 	private var _moveDir:Float;
 
 	public var byType:Int = 0;
+
 	
 	public static inline var NONE:Int = 0;
 	public static inline var CHAPERONE:Int = 1;
