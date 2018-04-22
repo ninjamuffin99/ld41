@@ -15,7 +15,7 @@ class Character extends FlxSprite
 {
 
 	public var followSpeed:Int = 150;
-	public var Speed:Float = 2700;
+	public var Speed:Float = 1850;
 	private var Drag:Float = 900;
 	private var MaxVel:Float = 350;
 	private var curRads:Float = 0;
@@ -39,7 +39,7 @@ class Character extends FlxSprite
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{
 		super(X, Y);
-		makeGraphic(220, 320, FlxColor.GREEN);
+		makeGraphic(110, 180, FlxColor.GREEN);
 		
 		
 		drag.x = Drag;
@@ -49,10 +49,17 @@ class Character extends FlxSprite
 		resizeHitbox();
 	}
 	
+	override public function update(elapsed:Float):Void 
+	{
+		super.update(elapsed);
+		
+		this.set_visible(this.isOnScreen());
+	}
+	
 	private function resizeHitbox():Void
 	{
-		offset.set(78, height - 50);
-		width = 100;
+		offset.set(20, height - 50);
+		width = 70;
 		height = 50;
 	}
 	

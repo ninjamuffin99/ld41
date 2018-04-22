@@ -2,12 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxAngle;
-import flixel.math.FlxPoint;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 
 /**
  * ...
@@ -130,12 +126,8 @@ class Player extends Character
 	
 	private function rotation():Void
 	{
-		var rads:Float = Math.atan2(FlxG.mouse.y - getMidpoint().y, FlxG.mouse.x - getMidpoint().x);
+		var rads:Float = Math.atan2(FlxG.mouse.y - (getMidpoint().y - 80), FlxG.mouse.x - getMidpoint().x);
 		curRads = rads;
-		
-		var degs = FlxAngle.asDegrees(rads);
-		//FlxG.watch.addQuick("Degs/Angle", degs);
-		//angle = degs + 90;
 	}
 	
 	private function firingHandling():Void
@@ -164,7 +156,7 @@ class Player extends Character
 	{
 		if (canFire)
 		{
-			var newBullet = new Bullet(getMidpoint().x, getMidpoint().y - 160, 1000, 60, curRads);
+			var newBullet = new Bullet(getMidpoint().x, getMidpoint().y - 80, 1000, 60, curRads);
 			newBullet.accuracy = accuracy;
 			newBullet.bType = bullType;
 			newBullet.velocity.x += velocity.x * 0.2;

@@ -1,6 +1,5 @@
 package;
 
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -26,16 +25,18 @@ class PlayState extends FlxState
 	private var voteCounter:Int = 0;
 	private var totalVotes:Int = 0;
 	private var txtVotes:FlxText;
+	
+	private var moawVotes:Int = 0;
+	
+	private var countdown:Float = 120;
+	private var txtTimer:FlxText;
 
 	override public function create():Void
 	{
-		FlxG.camera.zoom = 0.5;
-
 		bg = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.GRAY);
 		add(bg);
 		
 		initCharacters();
-
 		initHUD();
 		
 		FlxG.worldBounds.set(0, 0, bg.width, bg.height);
@@ -64,7 +65,7 @@ class PlayState extends FlxState
 		enemy = new Enemy(50, 50);
 		_grpCharacters.add(enemy);
 		
-		for (i in 0...FlxG.random.int(3, 6))
+		for (i in 0...FlxG.random.int(8, 30))
 		{
 			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width), FlxG.random.float(0, bg.height));
 			_grpCharacters.add(testie);
@@ -74,17 +75,24 @@ class PlayState extends FlxState
 	
 	private function initHUD():Void
 	{
-		txtVotes = new FlxText(10, 10, 0, "", 32);
+		txtVotes = new FlxText(10, 10, 0, "", 24);
 		txtVotes.scrollFactor.set(0, 0);
 		add(txtVotes);
+		
+		txtTimer = new FlxText(300, 10, 0, "", 24);
+		txtTimer.scrollFactor.set();
+		add(txtTimer);
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		
-		txtVotes.text = "Votes: " + voteCounter + " / " + totalVotes;
-
+		txtVotes.text = "Your Votes: " + voteCounter + " / " + totalVotes;
+		txtTimer.text = "Time Left: " + Std.int(countdown / 60) + ":" + Std.int(countdown % 60);
+		
+		countdown -= FlxG.elapsed;
+		
 		_grpCharacters.sort(FlxSort.byY);
 		cameraHandle();
 
