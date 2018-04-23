@@ -1,5 +1,6 @@
 package;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
@@ -28,13 +29,20 @@ class Bystander extends Character
 		
 		ID = Character.BYSTANDER;
 		
+		loadGraphic("assets/images/npc" + FlxG.random.int(1, 5) + ".png");
+		resizeHitbox();
+		
+		setFacingFlip(FlxObject.LEFT, false, false);
+		setFacingFlip(FlxObject.RIGHT, true, false);
 		
 		byType = KID;
 		
 		if (FlxG.random.bool(10))
 		{
 			ID = Character.CHAPERONE;
-			color = FlxColor.BLUE;
+			loadGraphic(AssetPaths.chaperon__png);
+			resizeHitbox();
+			width += 15;
 		}
 		
 		_brain = new FSM(idle);
@@ -44,6 +52,15 @@ class Bystander extends Character
 	{
 		
 		super.update(elapsed);
+		
+		if (velocity.x > 0)
+		{
+			facing = FlxObject.RIGHT;
+		}
+		else if (velocity.x < 0)
+		{
+			facing = FlxObject.LEFT;
+		}
 		
 		if (anger > 0)
 		{

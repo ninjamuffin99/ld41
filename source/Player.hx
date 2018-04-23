@@ -261,6 +261,9 @@ class Player extends Character
 	private function kissAnims(direction:String):Void
 	{
 		attacking = true;
+		
+		FlxG.sound.play("assets/sounds/kiss" + FlxG.random.int(1, 3) + ".mp3", 0.7);
+		
 		if (direction == "Left")
 		{
 			switch(facing)
@@ -297,7 +300,7 @@ class Player extends Character
 		if (canFire)
 		{
 			
-			var newBullet = new Bullet(getMidpoint().x, getMidpoint().y - 80, 1000, 60, curRads);
+			var newBullet = new Bullet(getMidpoint().x, getMidpoint().y - 80, 1000, 60, curRads, bullType);
 			newBullet.accuracy = accuracy;
 			newBullet.bType = bullType;
 			newBullet.velocity.x += velocity.x * 0.2;

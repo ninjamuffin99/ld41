@@ -20,11 +20,17 @@ class Bullet extends FlxSprite
 	
 	public var damage:Float;
 	
-	public function new(?X:Float=0, ?Y:Float=0, Speed:Float, Damage:Float, bullAngle:Float) 
+	public function new(?X:Float=0, ?Y:Float=0, Speed:Float, Damage:Float, bullAngle:Float, typ:String) 
 	{
 		super(X, Y);
 		
 		loadGraphic(AssetPaths.PG_Kiss__png);
+		
+		if (typ == "PlayerRight")
+		{
+			loadGraphic(AssetPaths.PG_KissBlue__png);
+		}
+		
 		//loadGraphic("assets/images/bulletSheet.png", true, 32, 20);
 		//animation.add("play", [0, 1], 24);
 		//animation.play("play");

@@ -21,6 +21,8 @@ class HeartIcon extends FlxSprite
 		animation.add("garlic", [1]);
 		animation.add("goblin", [2]);
 		
+		alpha = 0;
+		
 		tarBystander = bystander;
 	}
 	

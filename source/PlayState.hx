@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.effects.FlxTrail;
 import flixel.addons.effects.FlxTrailArea;
+import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxVelocity;
@@ -43,6 +44,8 @@ class PlayState extends FlxState
 
 	private var finished:Bool = false;
 	
+	private var _grpWalls:FlxTypedGroup<FlxObject>;
+	
 	override public function create():Void
 	{
 		FlxG.camera.zoom = 0.7;
@@ -56,7 +59,7 @@ class PlayState extends FlxState
 		initCharacters();
 		initHUD();
 		
-		FlxG.worldBounds.set(0, 0, bg.width, bg.height);
+		
 
 		//playMovie();
 		super.create();
@@ -78,6 +81,28 @@ class PlayState extends FlxState
 	
 	private function initCharacters():Void
 	{
+		_grpWalls = new FlxTypedGroup<FlxObject>();
+		add(_grpWalls);
+		
+		var wall1:FlxObject = new FlxObject(0, 0, FlxG.width * 3 - 1, 1);
+		wall1.immovable = true;
+		_grpWalls.add(wall1);
+		
+		var wall2:FlxObject = new FlxObject(0, FlxG.height * 3 - 1, FlxG.width, 1);
+		wall2.immovable = true;
+		_grpWalls.add(wall2);
+		
+		var wall3:FlxObject = new FlxObject(0, 0, 1, FlxG.height * 3);
+		wall3.immovable = true;
+		_grpWalls.add(wall3);
+		
+		var wall4:FlxObject = new FlxObject(FlxG.width * 3 - 1, 0, 1, FlxG.height * 3);
+		wall3.immovable = true;
+		_grpWalls.add(wall4);
+		
+		
+		
+		
 		_camTrack = new FlxObject(0, 0, 1, 1);
 		add(_camTrack);
 		
@@ -100,9 +125,9 @@ class PlayState extends FlxState
 		_grpCharacters.add(enemy);
 		
 		
-		for (i in 0...FlxG.random.int(30, 100))
+		for (i in 0...FlxG.random.int(50, 100))
 		{
-			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width), FlxG.random.float(0, bg.height));
+			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width - 60), FlxG.random.float(0, bg.height - 60));
 			_grpCharacters.add(testie);
 			totalVotes += 1;
 			
@@ -125,6 +150,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
+		
 		phoneHandling();
 		
 		if (countdown > 0)
@@ -146,6 +172,7 @@ class PlayState extends FlxState
 		playerBullets.forEachAlive(checkBulletOverlap);
 		
 		FlxG.collide(_grpCharacters, _grpCharacters);
+		FlxG.collide(_grpWalls, _grpCharacters);
 
 	}
 	
