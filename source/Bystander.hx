@@ -31,7 +31,7 @@ class Bystander extends Character
 		
 		if (FlxG.random.bool(10))
 		{
-			byType = CHAPERONE;
+			ID = Character.CHAPERONE;
 			color = FlxColor.BLUE;
 		}
 		
@@ -40,8 +40,17 @@ class Bystander extends Character
 	
 	override public function update(elapsed:Float):Void 
 	{
-		_brain.update();
+		
 		super.update(elapsed);
+		
+		if (anger > 0)
+		{
+			anger -= FlxG.elapsed;
+		}
+		else
+		{
+			_brain.update();
+		}
 	}
 	
 	

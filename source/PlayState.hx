@@ -215,24 +215,31 @@ class PlayState extends FlxState
 				moawVotes += 1;
 		}
 		
-		if (c.ID == Character.ENEMY)
+		switch(c.ID)
 		{
-			for (i in _grpCharacters.members)
-			{
-				if (i.ID == Character.BYSTANDER && FlxMath.isDistanceWithin(c, i, 560) && i.currentVote != Character.ENEMY)
+			case Character.ENEMY:
+				for (i in _grpCharacters.members)
 				{
-					FlxVelocity.moveTowardsObject(c, i, 130);
+					if (i.ID == Character.BYSTANDER && FlxMath.isDistanceWithin(c, i, 560) && i.currentVote != Character.ENEMY)
+					{
+						FlxVelocity.moveTowardsObject(c, i, 130);
+					}
+					
+					if (FlxMath.isDistanceWithin(c, i, 100))
+					{
+						i.currentVote = Character.ENEMY;
+					}
 				}
-				
-				if (FlxMath.isDistanceWithin(c, i, 100))
+			case Character.CHAPERONE:
+				if (c.anger > 0)
 				{
-					i.currentVote = Character.ENEMY;
+					FlxVelocity.moveTowardsObject(c, _player, 320);
+					if (FlxMath.isDistanceWithin(c, _player, 90))
+					{
+						FlxG.resetGame();
+					}
 				}
-				
-			}
 		}
-		
-		
 	}
 	
 	private function checkBulletOverlap(b:Bullet):Void
@@ -266,6 +273,12 @@ class PlayState extends FlxState
 							c.heart.alpha = 1;
 						}
 						
+						b.kill();
+					case Character.CHAPERONE:
+						if (b.bType == "Player")
+						{
+							c.anger += FlxG.random.float(1, 4);
+						}
 						b.kill();
 				}
 				

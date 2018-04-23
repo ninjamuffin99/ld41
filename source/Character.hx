@@ -34,6 +34,9 @@ class Character extends FlxSprite
 	public static inline var PLAYER:Int = 1;
 	public static inline var ENEMY:Int = 2;
 	public static inline var BYSTANDER:Int = 3;
+	public static inline var CHAPERONE:Int = 4;
+	
+	public var anger:Float = 0;
 	
 	public var currentVote:Int = 0;
 	public var heart:HeartIcon;
