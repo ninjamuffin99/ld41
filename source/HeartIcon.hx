@@ -16,7 +16,10 @@ class HeartIcon extends FlxSprite
 	public function new(?X:Float=0, ?Y:Float=0, bystander:Character) 
 	{
 		super(X, Y);
-		makeGraphic(40, 40);
+		loadGraphic(AssetPaths.smallIconSheet__png, true, 45, 45);
+		animation.add("x", [0]);
+		animation.add("garlic", [1]);
+		animation.add("goblin", [2]);
 		
 		tarBystander = bystander;
 	}
@@ -30,15 +33,15 @@ class HeartIcon extends FlxSprite
 		
 		if (tarBystander.currentVote == Character.PLAYER)
 		{
-			color = FlxColor.PURPLE;
+			animation.play("goblin");
 		}
 		else if (tarBystander.currentVote == Character.ENEMY)
 		{
-			color = FlxColor.RED;
+			animation.play("garlic");
 		}
 		else
 		{
-			color = FlxColor.MAGENTA;
+			animation.play("x");
 		}
 		
 		if (alpha > 0)

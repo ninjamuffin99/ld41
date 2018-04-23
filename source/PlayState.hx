@@ -219,9 +219,9 @@ class PlayState extends FlxState
 		{
 			for (i in _grpCharacters.members)
 			{
-				if (i.ID == Character.BYSTANDER && FlxMath.isDistanceWithin(c, i, 300) && i.currentVote != Character.ENEMY)
+				if (i.ID == Character.BYSTANDER && FlxMath.isDistanceWithin(c, i, 560) && i.currentVote != Character.ENEMY)
 				{
-					FlxVelocity.moveTowardsObject(c, i, 100);
+					FlxVelocity.moveTowardsObject(c, i, 130);
 				}
 				
 				if (FlxMath.isDistanceWithin(c, i, 100))
