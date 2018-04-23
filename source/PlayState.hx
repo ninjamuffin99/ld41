@@ -49,8 +49,14 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.camera.zoom = 0.7;
-		bg = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.GRAY);
+		bg = new FlxSprite(0, 0);
+		bg.loadGraphic(AssetPaths.BG_Gymnasium__png);
+		bg.offset.y = 300;
 		add(bg);
+		
+		FlxG.camera.setScrollBoundsRect(bg.x, bg.y - 300, bg.width, bg.height, true);
+		
+		FlxG.log.add(bg.width + " " + bg.height);
 		
 		FlxG.sound.playMusic("assets/music/589874_Beast-ModeREVERBED.mp3", 0.15);
 		FlxG.sound.music.fadeIn(2, 0, 0.15);
@@ -59,7 +65,7 @@ class PlayState extends FlxState
 		initCharacters();
 		initHUD();
 		
-		
+		//FlxG.worldBounds.setSize(bg.width * 3 + 10, bg.height * 3 + 10);
 
 		//playMovie();
 		super.create();
@@ -84,20 +90,20 @@ class PlayState extends FlxState
 		_grpWalls = new FlxTypedGroup<FlxObject>();
 		add(_grpWalls);
 		
-		var wall1:FlxObject = new FlxObject(0, 0, FlxG.width * 3 - 1, 1);
+		var wall1:FlxObject = new FlxObject(0, 0, bg.width, 1);
 		wall1.immovable = true;
 		_grpWalls.add(wall1);
 		
-		var wall2:FlxObject = new FlxObject(0, FlxG.height * 3 - 1, FlxG.width, 1);
+		var wall2:FlxObject = new FlxObject(0, 1150, bg.width, 1);
 		wall2.immovable = true;
 		_grpWalls.add(wall2);
 		
-		var wall3:FlxObject = new FlxObject(0, 0, 1, FlxG.height * 3);
+		var wall3:FlxObject = new FlxObject(0, 0, 1, bg.height);
 		wall3.immovable = true;
 		_grpWalls.add(wall3);
 		
-		var wall4:FlxObject = new FlxObject(FlxG.width * 3 - 1, 0, 1, FlxG.height * 3);
-		wall3.immovable = true;
+		var wall4:FlxObject = new FlxObject(bg.width - 1, 0, 1, bg.height);
+		wall4.immovable = true;
 		_grpWalls.add(wall4);
 		
 		
@@ -127,7 +133,7 @@ class PlayState extends FlxState
 		
 		for (i in 0...FlxG.random.int(50, 100))
 		{
-			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width - 60), FlxG.random.float(0, bg.height - 60));
+			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width - 60), FlxG.random.float(0, bg.height - 100));
 			_grpCharacters.add(testie);
 			totalVotes += 1;
 			

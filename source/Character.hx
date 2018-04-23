@@ -57,7 +57,7 @@ class Character extends FlxSprite
 	override public function update(elapsed:Float):Void 
 	{
 		super.update(elapsed);
-		
+
 		this.set_visible(this.isOnScreen());
 	}
 	

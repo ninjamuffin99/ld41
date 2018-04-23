@@ -1,6 +1,7 @@
 package;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
@@ -40,7 +41,15 @@ class Bystander extends Character
 		if (FlxG.random.bool(10))
 		{
 			ID = Character.CHAPERONE;
-			loadGraphic(AssetPaths.chaperon__png);
+			
+			var tex = FlxAtlasFrames.fromSpriteSheetPacker(AssetPaths.chaperoneSheet__png, AssetPaths.chaperoneSheet__txt);
+			
+			//exactly 69 unique animation frames nice
+			frames = tex;
+			animation.add("idle", [0]);
+			animation.add("run", [1, 2, 3, 2], 12);
+			animation.play("idle");
+			
 			resizeHitbox();
 			width += 15;
 		}
@@ -52,6 +61,17 @@ class Bystander extends Character
 	{
 		
 		super.update(elapsed);
+		
+				
+		if (anger > 0)
+		{
+			animation.play("run");
+		}
+		else if (ID == Character.CHAPERONE)
+		{
+			animation.play("idle", true);
+		}
+		
 		
 		if (velocity.x > 0)
 		{
@@ -71,7 +91,6 @@ class Bystander extends Character
 			_brain.update();
 		}
 	}
-	
 	
 	public function idle():Void
 	{

@@ -46,10 +46,12 @@ class PhoneGroup extends FlxSpriteGroup
 		add(txtE);
 		
 		gobHead = new FlxSprite(15, 15).loadGraphic(AssetPaths.goblinHead__png);
+		gobHead.antialiasing = true;
 		gobHead.angle = 15;
 		add(gobHead);
 		
 		stinkerHead = new FlxSprite(15, gobHead.height + 5).loadGraphic(AssetPaths.stinkerHead__png);
+		stinkerHead.antialiasing = true;
 		stinkerHead.angle = -20;
 		add(stinkerHead);
 				

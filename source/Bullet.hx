@@ -75,7 +75,12 @@ class Bullet extends FlxSprite
 		
 		var degs = FlxAngle.asDegrees(rads);
 		//FlxG.watch.addQuick("Degs/Angle", degs);
-		angle = degs + 90;
+		if (bType == "Player")
+		{
+			angle = degs + 90;
+		}
+		else
+			angle = degs;
 		
 		life -= FlxG.elapsed;
 		if (life < 0)
