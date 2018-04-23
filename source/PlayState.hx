@@ -72,17 +72,17 @@ class PlayState extends FlxState
 	
 	private function initCharacters():Void
 	{
-		
 		_camTrack = new FlxObject(0, 0, 1, 1);
 		add(_camTrack);
+		
+		playerBullets = new FlxTypedGroup<Bullet>();
+		add(playerBullets);
 
 		_grpCharacters = new FlxTypedGroup<Character>();
 		add(_grpCharacters);
+		
 		_grpHearts = new FlxTypedGroup<HeartIcon>();
 		add(_grpHearts);
-
-		playerBullets = new FlxTypedGroup<Bullet>();
-		add(playerBullets);
 
 		_player = new Player(20, 20, playerBullets);
 		_grpCharacters.add(_player);
@@ -160,6 +160,8 @@ class PlayState extends FlxState
 		_phone.votes = voteCounter;
 		_phone.totVotes = totalVotes;
 		_phone.votesMoaw = moawVotes;
+		
+		_player.onPhone = _phone.on;
 		
 		if (FlxG.keys.justPressed.E)
 		{

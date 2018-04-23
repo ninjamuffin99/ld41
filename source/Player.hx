@@ -11,6 +11,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
  */
 class Player extends Character 
 {
+	
+	private var moving:Bool = false;
+	private var attacking:Bool = false;
+	public var onPhone:Bool = false;
+	
 	public function new(?X:Float=0, ?Y:Float=0, playerBulletArray:FlxTypedGroup<Bullet>) 
 	{
 		super(X, Y);
@@ -32,26 +37,33 @@ class Player extends Character
 		animation.add("d", [0]);
 		animation.play("d");
 		
-		var frameRate:Int = 18;
+		//Idle Phone
+		animation.add("uPhone", [52]);
+		animation.add("dPhone", [55]);
+		animation.add("lrPhone", [58]);
+		
+		var frameRate:Int = 12;
 		//attacks
 		animation.add("uWalkAttack1", [3, 4, 5, 6], frameRate, false);
 		animation.add("uWalkAttack2", [7, 8, 9, 10], frameRate, false);
 		animation.add("uAttack1", [11, 12, 13, 14], frameRate, false);
 		animation.add("uAttack2", [15, 16, 17, 18], frameRate, false);
-		animation.add("dWalkAttack1", [19, 20, 21, frameRate], 18, false);
-		animation.add("dWalkAttack2", [23, 24, 25, frameRate], 18, false);
+		animation.add("dWalkAttack1", [19, 20, 21], frameRate, false);
+		animation.add("dWalkAttack2", [23, 24, 25], frameRate, false);
 		animation.add("dAttack1", [27, 28, 29, 30], frameRate, false);
 		animation.add("dAttack2", [31, 32, 33, 34], frameRate, false);
-		animation.add("lrWalkAttack1", [35, 36, 37, frameRate], 18, false);
-		animation.add("lrWalkAttack2", [39, 40, 41, frameRate], 18, false);
+		animation.add("lrWalkAttack1", [35, 36, 37], frameRate, false);
+		animation.add("lrWalkAttack2", [39, 40, 41], frameRate, false);
 		animation.add("lrAttack1", [43, 44, 45, 46], frameRate, false);
 		animation.add("lrAttack2", [47, 48, 49, 50], frameRate, false);
 		animation.add("lrAttack2", [47, 48, 49, 50], frameRate, false);
-		animation.add("uWalkPhone", [51, 52, 53, 52], frameRate, true);
-		animation.add("dWalkPhone", [54, 55, 56, 55], frameRate, true);
-		animation.add("lrWalkPhone", [57, 58, 59, 58], frameRate, true);
-		animation.add("uWalk", [60, 61, 62, 61], frameRate, true);
-		animation.add("dWalk", [63, 64, 65, 64], frameRate, true);
+		//Phone
+		animation.add("uWalkPhone", [51, 52, 53, 52], frameRate, false);
+		animation.add("dWalkPhone", [54, 55, 56, 55], frameRate, false);
+		animation.add("lrWalkPhone", [57, 58, 59, 58], frameRate, false);
+		//Walking
+		animation.add("uWalk", [60, 61, 62, 61], frameRate, false);
+		animation.add("dWalk", [63, 64, 65, 64], frameRate, false);
 		animation.add("lrWalk", [66, 67, 68, 67], frameRate, false);
 		
 		
@@ -90,6 +102,7 @@ class Player extends Character
 		
 		if (_left || _right || _up || _down)
 		{
+			moving = true;
 			if (FlxG.keys.pressed.SHIFT)
 			{
 				maxVelocity.set(MaxVel * 1.4, MaxVel * 1.4);
@@ -131,21 +144,79 @@ class Player extends Character
 		else
 		{
 			acceleration.x = acceleration.y = 0;
+			
+			moving = false;
 		}
 		
-		
-		if ((velocity.y != 0 || velocity.x != 0) && touching == FlxObject.NONE)
+		if (!attacking)
 		{
-			switch(facing)
+			if ((velocity.y != 0 || velocity.x != 0) && touching == FlxObject.NONE && moving)
 			{
-				case FlxObject.LEFT:
-					animation.play("lr");
-				case FlxObject.RIGHT:
-					animation.play("lr");
-				case FlxObject.UP:
-					animation.play("u");
-				case FlxObject.DOWN:
-					animation.play("d");
+				switch(facing)
+				{
+					case FlxObject.LEFT:
+						animation.play("lrWalk");
+					case FlxObject.RIGHT:
+						animation.play("lrWalk");
+					case FlxObject.UP:
+						animation.play("uWalk");
+					case FlxObject.DOWN:
+						animation.play("dWalk");
+				}
+				
+				if (onPhone)
+				{
+					switch(facing)
+					{
+						case FlxObject.LEFT:
+							animation.play("lrWalkPhone");
+						case FlxObject.RIGHT:
+							animation.play("lrWalkPhone");
+						case FlxObject.UP:
+							animation.play("uWalkPhone");
+						case FlxObject.DOWN:
+							animation.play("dWalkPhone");
+					}
+					
+				}
+				
+			}
+			else
+			{
+				switch(facing)
+				{
+					case FlxObject.LEFT:
+						animation.play("lr");
+					case FlxObject.RIGHT:
+						animation.play("lr");
+					case FlxObject.UP:
+						animation.play("u");
+					case FlxObject.DOWN:
+						animation.play("d");
+				}
+				
+				if (onPhone)
+				{
+					switch(facing)
+					{
+						case FlxObject.LEFT:
+							animation.play("lrPhone");
+						case FlxObject.RIGHT:
+							animation.play("lrPhone");
+						case FlxObject.UP:
+							animation.play("uPhone");
+						case FlxObject.DOWN:
+							animation.play("dPhone");
+					}
+				
+				}
+			}
+		}
+		else
+		{
+			if (animation.curAnim.finished)
+			{
+				attacking = false;
 			}
 		}
 		
@@ -177,11 +248,46 @@ class Player extends Character
 		{
 			FlxG.camera.shake(0.01, 0.08);
 			attack("Player");
+			kissAnims("Left");
 		}
 		else if (rmClicked)
 		{
 			FlxG.camera.shake(0.01, 0.08);
 			attack("PlayerRight");
+			kissAnims("Right");
+		}
+	}
+	
+	private function kissAnims(direction:String):Void
+	{
+		attacking = true;
+		if (direction == "Left")
+		{
+			switch(facing)
+			{
+				case FlxObject.LEFT:
+					animation.play("lrAttack1");
+				case FlxObject.RIGHT:
+					animation.play("lrAttack1");
+				case FlxObject.UP:
+					animation.play("uAttack1");
+				case FlxObject.DOWN:
+					animation.play("dAttack1");
+			}
+		}
+		else
+		{
+			switch(facing)
+			{
+				case FlxObject.LEFT:
+					animation.play("lrAttack2");
+				case FlxObject.RIGHT:
+					animation.play("lrAttack2");
+				case FlxObject.UP:
+					animation.play("uAttack2");
+				case FlxObject.DOWN:
+					animation.play("dAttack2");
+			}
 		}
 		
 	}
@@ -190,6 +296,7 @@ class Player extends Character
 	{
 		if (canFire)
 		{
+			
 			var newBullet = new Bullet(getMidpoint().x, getMidpoint().y - 80, 1000, 60, curRads);
 			newBullet.accuracy = accuracy;
 			newBullet.bType = bullType;
