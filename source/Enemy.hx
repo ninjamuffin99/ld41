@@ -21,17 +21,12 @@ class Enemy extends Character
 		drag.set(500, 500);
 		resizeHitbox();
 		ID = Character.ENEMY;
-		
-
-		
 	}
 	
 	override public function update(elapsed:Float):Void 
 	{
 		
 		super.update(elapsed);
-	
-		
 	}
 	
 }

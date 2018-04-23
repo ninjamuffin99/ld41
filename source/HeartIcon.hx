@@ -32,9 +32,13 @@ class HeartIcon extends FlxSprite
 		{
 			color = FlxColor.PURPLE;
 		}
-		else
+		else if (tarBystander.currentVote == Character.ENEMY)
 		{
 			color = FlxColor.RED;
+		}
+		else
+		{
+			color = FlxColor.MAGENTA;
 		}
 		
 		if (alpha > 0)

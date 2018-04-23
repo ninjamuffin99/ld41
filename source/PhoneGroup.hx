@@ -23,6 +23,9 @@ class PhoneGroup extends FlxSpriteGroup
 	public var votesMoaw:Int = 0;
 	public var on:Bool = false;
 	
+	private var gobHead:FlxSprite;
+	private var stinkerHead:FlxSprite;
+	
 	public function new(X:Float=0, Y:Float=0, MaxSize:Int=0) 
 	{
 		super(X, Y, MaxSize);
@@ -30,12 +33,19 @@ class PhoneGroup extends FlxSpriteGroup
 		_bg = new FlxSprite().makeGraphic(Std.int(FlxG.width * 0.45), Std.int(FlxG.height * 1.1), FlxColor.BLUE);
 		add(_bg);
 		
-		txtVotes = new FlxText(10, 10, 0, "", 24);
+		gobHead = new FlxSprite(15, 15).loadGraphic(AssetPaths.goblinHead__png);
+		gobHead.angle = 15;
+		add(gobHead);
+		
+		stinkerHead = new FlxSprite(15, gobHead.height + 5).loadGraphic(AssetPaths.stinkerHead__png);
+		stinkerHead.angle = -20;
+		add(stinkerHead);
+				
+		txtVotes = new FlxText(20 + gobHead.width, 60, 0, "", 36);
 		add(txtVotes);
 		
 		txtTimer = new FlxText(10, 260, 0, "", 24);
 		add(txtTimer);
-		
 		
 	}
 	
@@ -44,8 +54,8 @@ class PhoneGroup extends FlxSpriteGroup
 		super.update(elapsed);
 		timerHandling();
 		
-		txtVotes.text = "Your Votes: " + votes + " / " + totVotes;
-		txtVotes.text += "\nGarlic Kid's Votes: " + votesMoaw + " / " + totVotes;
+		txtVotes.text = "" + votes + " / " + totVotes;
+		txtVotes.text += "\n\n" + votesMoaw + " / " + totVotes;
 		
 		
 	}

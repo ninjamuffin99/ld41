@@ -5,11 +5,14 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
+import flixel.math.FlxVelocity;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
+import flixel.util.FlxPath;
 import flixel.util.FlxSort;
 import openfl.Lib;
 import openfl.media.Video;
@@ -126,41 +129,13 @@ class PlayState extends FlxState
 			finishGame();
 			finished = true;
 		}
-		
-		_phone.countTimer = countdown;
-		_phone.votes = voteCounter;
-		_phone.totVotes = totalVotes;
-		_phone.votesMoaw = moawVotes;
-		
+
 		moawVotes = 0;
 		voteCounter = 0;
 		_grpCharacters.forEach(characterLogic);
 		
 		_grpCharacters.sort(FlxSort.byY);
-		if (_phone.on)
-		{
-			FlxG.camera.followLerp = 0.04;
-			_camTrack.setPosition(_player.x - 150, _player.y - 50);
-			if (_camTrack.ID != 1)
-			{
-				FlxTween.tween(FlxG.camera, {zoom: 0.9}, 0.3, {ease:FlxEase.quadInOut});
-				_camTrack.ID = 1;
-			}
-			
-		}
-		else
-		{
-			if (_camTrack.ID != 0)
-			{
-				FlxTween.tween(FlxG.camera, {zoom: 0.7}, 0.3, {ease:FlxEase.quadInOut});
-				_camTrack.ID = 0;
-			}
-			
-			FlxG.camera.followLerp = 0.45;
-			cameraHandle();
-		}
 		
-
 		playerBullets.forEachAlive(checkBulletOverlap);
 		
 		FlxG.collide(_grpCharacters, _grpCharacters);
@@ -180,7 +155,12 @@ class PlayState extends FlxState
 	}
 	
 	private function phoneHandling():Void
-	{
+	{	
+		_phone.countTimer = countdown;
+		_phone.votes = voteCounter;
+		_phone.totVotes = totalVotes;
+		_phone.votesMoaw = moawVotes;
+		
 		if (FlxG.keys.justPressed.E)
 		{
 			var goalY:Float = 0;
@@ -199,8 +179,29 @@ class PlayState extends FlxState
 			_phone.on = !_phone.on;
 			
 			FlxTween.tween(_phone, {y: goalY}, 0.4, {ease:curEase});
+		}
+		
+		
+		if (_phone.on)
+		{
+			FlxG.camera.followLerp = 0.04;
+			_camTrack.setPosition(_player.x - 150, _player.y - 50);
+			if (_camTrack.ID != 1)
+			{
+				FlxTween.tween(FlxG.camera, {zoom: 0.9}, 0.3, {ease:FlxEase.quadInOut});
+				_camTrack.ID = 1;
+			}
+		}
+		else
+		{
+			if (_camTrack.ID != 0)
+			{
+				FlxTween.tween(FlxG.camera, {zoom: 0.7}, 0.3, {ease:FlxEase.quadInOut});
+				_camTrack.ID = 0;
+			}
 			
-			
+			FlxG.camera.followLerp = 0.45;
+			cameraHandle();
 		}
 	}
 
@@ -213,8 +214,27 @@ class PlayState extends FlxState
 			case Character.ENEMY:
 				moawVotes += 1;
 		}
+		
+		if (c.ID == Character.ENEMY)
+		{
+			for (i in _grpCharacters.members)
+			{
+				if (i.ID == Character.BYSTANDER && FlxMath.isDistanceWithin(c, i, 300) && i.currentVote != Character.ENEMY)
+				{
+					FlxVelocity.moveTowardsObject(c, i, 100);
+				}
+				
+				if (FlxMath.isDistanceWithin(c, i, 100))
+				{
+					i.currentVote = Character.ENEMY;
+				}
+				
+			}
+		}
+		
+		
 	}
-
+	
 	private function checkBulletOverlap(b:Bullet):Void
 	{
 		
@@ -232,7 +252,7 @@ class PlayState extends FlxState
 					case Character.BYSTANDER:
 						if (b.bType == "Player")
 						{
-							if (c.currentVote == Character.PLAYER)
+							if (c.currentVote == Character.PLAYER || c.currentVote == Character.ENEMY)
 							{
 								c.currentVote = Character.NONE;
 							}

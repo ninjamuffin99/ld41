@@ -7,8 +7,19 @@ Todo:
 	ending:Screen gets dark, camera goes to stage, then winners are announced
 	maybe you have to hit them with a specific bullet to check what percentage they're at?
 	
+	spotlights that move around and obscure the view
+	get heads to be the hearts icons
+	tooltips in phone for instructions
+	when you shoot them too much you get penalized, maybe they go around telling rumors
+	lose state could be if you hit too  many chaperones
+	chaperones chase you if you flirt with them too much, lose them if you're out of distance for a certain amount of time
+	when bystanders talk shit they do so for a set amount of people
+	obstacles like tables and chairs are barely moveable
+	
 Current Task:
-	a heart fades in on bystander when you get closer, and changes color depending on how much they like you
+	get AI enemy going
+	
 Done:
 	shoot bullet to make them vote, and if you shoot them twice it negates it
 	player has to check phone for time and votes
+	a heart fades in on bystander when you get closer, and changes color depending on how much they like you
