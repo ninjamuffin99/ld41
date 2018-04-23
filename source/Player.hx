@@ -20,16 +20,41 @@ class Player extends Character
 		setFacingFlip(FlxObject.DOWN, false, false);
 		setFacingFlip(FlxObject.UP, false, false);
 		
-		var tex = FlxAtlasFrames.fromSpriteSheetPacker(AssetPaths.goblinSheet__png, AssetPaths.goblinSheet__txt);
+		var tex = FlxAtlasFrames.fromSpriteSheetPacker(AssetPaths.goblinSheetAll__png, AssetPaths.goblinSheetAll__txt);
 		
+		//exactly 69 unique animation frames nice
 		frames = tex;
 		
 		resizeHitbox();
-		
+		//Idle
 		animation.add("lr", [2]);
 		animation.add("u", [1]);
 		animation.add("d", [0]);
 		animation.play("d");
+		
+		var frameRate:Int = 18;
+		//attacks
+		animation.add("uWalkAttack1", [3, 4, 5, 6], frameRate, false);
+		animation.add("uWalkAttack2", [7, 8, 9, 10], frameRate, false);
+		animation.add("uAttack1", [11, 12, 13, 14], frameRate, false);
+		animation.add("uAttack2", [15, 16, 17, 18], frameRate, false);
+		animation.add("dWalkAttack1", [19, 20, 21, frameRate], 18, false);
+		animation.add("dWalkAttack2", [23, 24, 25, frameRate], 18, false);
+		animation.add("dAttack1", [27, 28, 29, 30], frameRate, false);
+		animation.add("dAttack2", [31, 32, 33, 34], frameRate, false);
+		animation.add("lrWalkAttack1", [35, 36, 37, frameRate], 18, false);
+		animation.add("lrWalkAttack2", [39, 40, 41, frameRate], 18, false);
+		animation.add("lrAttack1", [43, 44, 45, 46], frameRate, false);
+		animation.add("lrAttack2", [47, 48, 49, 50], frameRate, false);
+		animation.add("lrAttack2", [47, 48, 49, 50], frameRate, false);
+		animation.add("uWalkPhone", [51, 52, 53, 52], frameRate, true);
+		animation.add("dWalkPhone", [54, 55, 56, 55], frameRate, true);
+		animation.add("lrWalkPhone", [57, 58, 59, 58], frameRate, true);
+		animation.add("uWalk", [60, 61, 62, 61], frameRate, true);
+		animation.add("dWalk", [63, 64, 65, 64], frameRate, true);
+		animation.add("lrWalk", [66, 67, 68, 67], frameRate, false);
+		
+		
 		
 		
 		bulletArray = playerBulletArray;
