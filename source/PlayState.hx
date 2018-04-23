@@ -9,6 +9,7 @@ import flixel.addons.effects.FlxTrailArea;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxVelocity;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -47,6 +48,10 @@ class PlayState extends FlxState
 		FlxG.camera.zoom = 0.7;
 		bg = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.GRAY);
 		add(bg);
+		
+		FlxG.sound.playMusic("assets/music/589874_Beast-ModeREVERBED.mp3", 0.15);
+		FlxG.sound.music.fadeIn(2, 0, 0.15);
+		FlxG.sound.play(AssetPaths.crowdAmbient__mp3, 0.35, true);
 		
 		initCharacters();
 		initHUD();
@@ -93,6 +98,7 @@ class PlayState extends FlxState
 
 		enemy = new Enemy(50, 50);
 		_grpCharacters.add(enemy);
+		
 		
 		for (i in 0...FlxG.random.int(30, 100))
 		{
@@ -170,11 +176,13 @@ class PlayState extends FlxState
 			var curEase;
 			if (_phone.on)
 			{
+				FlxG.sound.play(AssetPaths.phoneOff__mp3, 0.7);
 				goalY = FlxG.height + 160;
 				curEase = FlxEase.backIn;
 			}
 			else
 			{
+				FlxG.sound.play(AssetPaths.phoneOn__wav, 0.7);
 				goalY = 20;
 				curEase = FlxEase.backOut;
 			}

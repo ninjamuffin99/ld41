@@ -1,6 +1,7 @@
 package;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 
 /**
@@ -24,6 +25,7 @@ class Bystander extends Character
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{
 		super(X, Y);
+		
 		ID = Character.BYSTANDER;
 		
 		
