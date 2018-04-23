@@ -24,7 +24,7 @@ class Bullet extends FlxSprite
 	{
 		super(X, Y);
 		
-		makeGraphic(32, 20);
+		loadGraphic(AssetPaths.PG_Kiss__png);
 		//loadGraphic("assets/images/bulletSheet.png", true, 32, 20);
 		//animation.add("play", [0, 1], 24);
 		//animation.play("play");
@@ -69,7 +69,7 @@ class Bullet extends FlxSprite
 		
 		var degs = FlxAngle.asDegrees(rads);
 		//FlxG.watch.addQuick("Degs/Angle", degs);
-		angle = degs;
+		angle = degs + 90;
 		
 		life -= FlxG.elapsed;
 		if (life < 0)

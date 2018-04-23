@@ -268,11 +268,11 @@ class Player extends Character
 				case FlxObject.LEFT:
 					animation.play("lrAttack1");
 				case FlxObject.RIGHT:
-					animation.play("lrAttack1");
+					animation.play("lrAttack2");
 				case FlxObject.UP:
 					animation.play("uAttack1");
 				case FlxObject.DOWN:
-					animation.play("dAttack1");
+					animation.play("dAttack2");
 			}
 		}
 		else
@@ -282,11 +282,11 @@ class Player extends Character
 				case FlxObject.LEFT:
 					animation.play("lrAttack2");
 				case FlxObject.RIGHT:
-					animation.play("lrAttack2");
+					animation.play("lrAttack1");
 				case FlxObject.UP:
 					animation.play("uAttack2");
 				case FlxObject.DOWN:
-					animation.play("dAttack2");
+					animation.play("dAttack1");
 			}
 		}
 		

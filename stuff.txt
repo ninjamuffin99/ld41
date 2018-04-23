@@ -4,7 +4,6 @@ Todo:
 	spotlights that move around and obscure the view
 	tooltips in phone for instructions
 	when you shoot them too much you get penalized, maybe they go around telling rumors
-	lose cahperones if you're out of distance for a certain amount of time
 	when bystanders talk shit they do so for a set amount of people
 	obstacles like tables and chairs are barely moveable
 	

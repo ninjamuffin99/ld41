@@ -4,6 +4,8 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.effects.FlxTrail;
+import flixel.addons.effects.FlxTrailArea;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxVelocity;
@@ -32,7 +34,6 @@ class PlayState extends FlxState
 	private var _grpHearts:FlxTypedGroup<HeartIcon>;
 	
 	private var _phone:PhoneGroup;
-	
 	
 	private var voteCounter:Int = 0;
 	private var totalVotes:Int = 0;
@@ -246,7 +247,6 @@ class PlayState extends FlxState
 	
 	private function checkBulletOverlap(b:Bullet):Void
 	{
-		
 		for (c in _grpCharacters.members)
 		{
 			if (FlxCollision.pixelPerfectCheck(c, b))
