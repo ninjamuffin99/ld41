@@ -38,7 +38,7 @@ class Bystander extends Character
 		
 		byType = KID;
 		
-		if (FlxG.random.bool(10))
+		if (FlxG.random.bool(7))
 		{
 			ID = Character.CHAPERONE;
 			
@@ -51,7 +51,8 @@ class Bystander extends Character
 			animation.play("idle");
 			
 			resizeHitbox();
-			width += 15;
+			offset.x += 30;
+			width += 40;
 		}
 		
 		_brain = new FSM(idle);

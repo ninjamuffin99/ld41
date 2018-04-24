@@ -2,6 +2,9 @@ package;
 
 import flixel.FlxGame;
 import openfl.display.Sprite;
+import com.newgrounds.*;
+import com.newgrounds.components.*;
+
 
 class Main extends Sprite
 {
@@ -9,5 +12,11 @@ class Main extends Sprite
 	{
 		super();
 		addChild(new FlxGame(0, 0, PlayState));
+		
+		var medalPopup:MedalPopup = new MedalPopup();
+		medalPopup.x = 20;
+		medalPopup.y = 20;
+		addChild(medalPopup);
+		
 	}
 }

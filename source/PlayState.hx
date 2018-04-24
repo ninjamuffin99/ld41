@@ -22,6 +22,8 @@ import openfl.Lib;
 import openfl.media.Video;
 import openfl.net.NetConnection;
 import openfl.net.NetStream;
+import com.newgrounds.components.*;
+import com.newgrounds.*;
 
 class PlayState extends FlxState
 {
@@ -48,6 +50,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		FlxG.camera.fade(FlxColor.BLACK, 2.5, true);
 		FlxG.camera.zoom = 0.7;
 		bg = new FlxSprite(0, 0);
 		bg.loadGraphic(AssetPaths.BG_Gymnasium__png);
@@ -106,6 +109,9 @@ class PlayState extends FlxState
 		wall4.immovable = true;
 		_grpWalls.add(wall4);
 		
+		var wallStage1:FlxObject = new FlxObject(652, 62, 863, 80);
+		wallStage1.immovable = true;
+		_grpWalls.add(wallStage1);
 		
 		
 		
@@ -133,7 +139,7 @@ class PlayState extends FlxState
 		
 		for (i in 0...FlxG.random.int(50, 100))
 		{
-			var testie:Bystander = new Bystander(FlxG.random.float(0, bg.width - 60), FlxG.random.float(0, bg.height - 100));
+			var testie:Bystander = new Bystander(FlxG.random.float(100, bg.width - 60), FlxG.random.float(100, bg.height - 100));
 			_grpCharacters.add(testie);
 			totalVotes += 1;
 			
@@ -212,12 +218,14 @@ class PlayState extends FlxState
 				FlxG.sound.play(AssetPaths.phoneOff__mp3, 0.7);
 				goalY = FlxG.height + 160;
 				curEase = FlxEase.backIn;
+				
 			}
 			else
 			{
 				FlxG.sound.play(AssetPaths.phoneOn__wav, 0.7);
 				goalY = 20;
 				curEase = FlxEase.backOut;
+				API.unlockMedal("MILLENIALS");
 			}
 			
 			_phone.on = !_phone.on;
@@ -261,10 +269,15 @@ class PlayState extends FlxState
 		
 		switch(c.ID)
 		{
+			case Character.BYSTANDER:
+				if (c.x > bg.width || c.x < 0 || c.y > 1150 || c.y < -10)
+				{
+					c.setPosition(FlxG.random.float(100, bg.width - 100), FlxG.random.float(400, bg.height - 300));
+				}
 			case Character.ENEMY:
 				for (i in _grpCharacters.members)
 				{
-					if (i.ID == Character.BYSTANDER && FlxMath.isDistanceWithin(c, i, 560) && i.currentVote != Character.ENEMY)
+					if (i.ID == Character.BYSTANDER && FlxMath.isDistanceWithin(c, i, 560) && i.currentVote != Character.ENEMY && i.y < 1060)
 					{
 						FlxVelocity.moveTowardsObject(c, i, 130);
 					}
@@ -282,6 +295,10 @@ class PlayState extends FlxState
 					{
 						FlxG.resetGame();
 					}
+				}
+				if (c.x > bg.width || c.x < 0 || c.y > 1150 || c.y < -10)
+				{
+					c.setPosition(FlxG.random.float(100, bg.width - 100), FlxG.random.float(400, bg.height - 300));
 				}
 		}
 	}

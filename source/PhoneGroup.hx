@@ -38,27 +38,31 @@ class PhoneGroup extends FlxSpriteGroup
 	{
 		super(X, Y, MaxSize);
 		
-		_bg = new FlxSprite().makeGraphic(Std.int(FlxG.width * 0.45), Std.int(FlxG.height * 1.1), FlxColor.BLUE);
+		_bg = new FlxSprite().loadGraphic(AssetPaths.PG_CellPhone__png);
 		FlxG.log.add(_bg.width + " " + _bg.height);
 		add(_bg);
 		
 		txtE = new FlxText(24, -36, 0, "Press E", 24);
 		add(txtE);
 		
-		gobHead = new FlxSprite(15, 15).loadGraphic(AssetPaths.goblinHead__png);
+		gobHead = new FlxSprite(15, 100).loadGraphic(AssetPaths.goblinHead__png);
 		gobHead.antialiasing = true;
 		gobHead.angle = 15;
+		gobHead.setGraphicSize(Std.int(gobHead.width * 0.7));
+		gobHead.updateHitbox();
 		add(gobHead);
 		
-		stinkerHead = new FlxSprite(15, gobHead.height + 5).loadGraphic(AssetPaths.stinkerHead__png);
+		stinkerHead = new FlxSprite(15, 170).loadGraphic(AssetPaths.stinkerHead__png);
 		stinkerHead.antialiasing = true;
 		stinkerHead.angle = -20;
+		stinkerHead.setGraphicSize(Std.int(stinkerHead.width * 0.7));
+		stinkerHead.updateHitbox();
 		add(stinkerHead);
 				
-		txtVotes = new FlxText(20 + gobHead.width, 60, 0, "", 36);
+		txtVotes = new FlxText(20 + gobHead.width, 125, 0, "", 30);
 		add(txtVotes);
 		
-		txtTimer = new FlxText(20, 235, 0, "", 24);
+		txtTimer = new FlxText(20, 255, 0, "", 24);
 		add(txtTimer);
 		
 		var tipX = _bg.width / 2 - 64;
@@ -70,7 +74,7 @@ class PhoneGroup extends FlxSpriteGroup
 		bg = new FlxSprite(16, tipY + 30).makeGraphic(Std.int(FlxG.width * 0.45) - 32, 245, FlxColor.GRAY);
 		//add(bg);
 		
-		info = new FlxText(32, tipY -8, bg.width - 32, "Left Click to blow kiss\nRight Click to check who they voted for\nE to open and close phone\nMade by\nninjamuffin99 and FuShark\nAdditional art by\nBrandyBuizel and Digimin\nFor Ludum Dare 41", 14);
+		info = new FlxText(48, tipY -8, bg.width - 32, "Left Click to blow kiss\nRight Click to check who they voted for\nE to open and close phone\nMade by\nninjamuffin99 and FuShark\nAdditional art by\nBrandyBuizel and Digimin\nFor Ludum Dare 41", 14);
 		add(info);
 		
 	}
