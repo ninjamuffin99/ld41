@@ -162,6 +162,12 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
+		#if debug
+			if (FlxG.keys.justPressed.R)
+			{
+				FlxG.switchState(new EndState(voteCounter, moawVotes));
+			}
+		#end
 		
 		phoneHandling();
 		
@@ -192,7 +198,7 @@ class PlayState extends FlxState
 	{
 		FlxG.camera.fade(FlxColor.BLACK, 1, false, function()
 		{
-			//send all the people to near the stage facing up, and turn off their AI
+			FlxG.switchState(new EndState(voteCounter, moawVotes));
 			FlxG.camera.fade(FlxColor.BLACK, 1, true, function()
 			{
 				//text shit
